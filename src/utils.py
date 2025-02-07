@@ -89,12 +89,9 @@ def transform_corners(corners, xmin, ymin):
     return [[corner[0] + xmin, corner[1] + ymin] for corner in corners]
 
 
-def define_dir(mask_lines_dir, lines_dir, corners_dir, pure_lines_out, result_dir):
-    os.makedirs(mask_lines_dir, exist_ok=True)
-    os.makedirs(lines_dir, exist_ok=True)
-    os.makedirs(corners_dir, exist_ok=True)
-    os.makedirs(pure_lines_out, exist_ok=True)
-    os.makedirs(result_dir, exist_ok=True)
+def define_dir(*directories):
+    for directory in directories:
+        os.makedirs(directory, exist_ok=True)
 
 
 def make_mask_transparent(mask):

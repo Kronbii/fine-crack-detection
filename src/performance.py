@@ -7,6 +7,7 @@ from scipy.spatial import cKDTree
 import pandas as pd
 import matplotlib.pyplot as plt
 from . import config
+from . import utils
 
 
 def interpolate_contour_points(contour, y_values):
@@ -331,10 +332,45 @@ def plot_per_frame_metrics(
         plt.show()
 
 
+def overlay_cracks(true_crack_img, gen_crack_img):
+    """
+    Overlay ground truth and generated cracks on the same image.
+    - Ground Truth → Green
+    - Generated Crack → Red
+    - Overlapping Areas → Yellow (Red + Green)
+
+    :param true_crack_img: Ground truth binary crack image
+    :param gen_crack_img: Generated binary crack image
+    :return: Overlayed image
+    """
+    # Ensure both images are the same size
+    if true_crack_img.shape != gen_crack_img.shape:
+        gen_crack_img = cv2.resize(
+            gen_crack_img, (true_crack_img.shape[1], true_crack_img.shape[0])
+        )
+
+    # Create an empty RGB image
+    overlay = np.zeros(
+        (true_crack_img.shape[0], true_crack_img.shape[1], 3), dtype=np.uint8
+    )
+
+    # Assign ground truth cracks to GREEN channel
+    overlay[:, :, 1] = true_crack_img  # Green channel
+
+    # Assign generated cracks to RED channel
+    overlay[:, :, 2] = gen_crack_img  # Red channel
+
+    return overlay
+
+
 def main():
     # Directories
     ground_frames_dir = config.ground_frames_dir
     gen_frames_dir = config.gen_frames_dir
+    metrics_output_dir = config.metrics_output_dir
+    output_overlay_dir = config.output_overlay_dir
+    utils.define_dir(metrics_output_dir, output_overlay_dir)
+
     output_json_file = config.output_json_file
     output_csv_file = config.output_csv_file
 
@@ -343,7 +379,11 @@ def main():
     for file in os.listdir(ground_frames_dir):
         true_frame_path = os.path.join(ground_frames_dir, file)
         frame_number = os.path.splitext(file)[0]
+        print(f"Processing Frame {frame_number}...")
         gen_frame_path = os.path.join(gen_frames_dir, f"{frame_number}.ppm")
+        output_overlayed_path = os.path.join(
+            output_overlay_dir, f"{frame_number}.ppm"
+        )
 
         # Load images
         true_crack_img = cv2.imread(true_frame_path, cv2.IMREAD_GRAYSCALE)
@@ -407,10 +447,12 @@ def main():
 
         final_metrics[f"Frame {frame_number}"] = it_metrics
 
-    # Save to JSON & CSV
-    write_to_json(final_metrics, output_json_file)
-    write_to_csv(final_metrics, output_csv_file)
+        # Save to JSON & CSV
+        write_to_json(final_metrics, output_json_file)
+        write_to_csv(final_metrics, output_csv_file)
 
+        overlay_ramy = overlay_cracks(true_bin, gen_bin)
+        cv2.imwrite(output_overlayed_path, overlay_ramy)
     print("Processing complete! Metrics saved.")
 
 
