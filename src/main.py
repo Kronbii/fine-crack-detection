@@ -4,6 +4,7 @@ import os
 from . import config
 from . import utils
 from . import process
+from . import metrics
 
 
 def main():
@@ -87,7 +88,7 @@ def main():
         print(f"Processed image {image_number}")
     print("[INFO] Done Processing")
     print("[INFO] Starting Perfomance Evaluation")
-    
+    metrics.main()
 
 
 if __name__ == "__main__":
