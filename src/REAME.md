@@ -1,6 +1,7 @@
 
 ## PV Crack Detection
 ### General Usage
+---
 `python3 -m src.main`
 
 
@@ -14,8 +15,8 @@
 * [`MST.py`](./MST.py): Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
 * [`shitomasi.py`](./shitomasi.py): Script for processing frames using the Shi-Tomasi algorithm.
 
----
 ### Configuration File Parameters
+---
 Instead of passing options as arguments, you need to edit the configuration file located at `/src/config.py`. The following options are available:
 
 #### Tracing Parameters
