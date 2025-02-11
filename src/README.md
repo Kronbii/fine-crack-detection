@@ -1,18 +1,18 @@
 
 ## PV Crack Detection
 ### General Usage
----
 `python3 -m src.main`
 
+---
 
 ### **Package Files**
+* [`config.py`](./config.py) - Configuration file containing parameters for the detection process.
+* [`greedy.py`](./greedy.py) - Implementation of the greedy-heuristic algorithm for crack ordering.
+* [`main.py`](./main.py) - Main script to run the crack detection process.
+* [`metrics.py`](./metrics.py) - Script for calculating performance metrics.
+* [`MST.py`](./MST.py) - Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
+* [`shitomasi.py`](./shitomasi.py) - Script for processing frames using the Shi-Tomasi algorithm.
 
-* [`config.py`](./config.py): Configuration file containing parameters for the detection process.
-* [`greedy.py`](./greedy.py): Implementation of the greedy-heuristic algorithm for crack ordering.
-* [`main.py`](./main.py): Main script to run the crack detection process.
-* [`metrics.py`](./metrics.py): Script for calculating performance metrics.
-* [`MST.py`](./MST.py): Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
-* [`shitomasi.py`](./shitomasi.py): Script for processing frames using the Shi-Tomasi algorithm.
 ---
 
 ### **Configuration File Parameters**
@@ -43,4 +43,5 @@ After setting the previous parameters, the following parameters will be automati
 * `output_overlay_dir`: Directory for overlay output (automatically edited)
 
 Make sure to update the configuration file with the appropriate values before running the script.
+
 ---
