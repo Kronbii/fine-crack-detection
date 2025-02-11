@@ -1,10 +1,9 @@
-# Automated Model Conversion
 
-## Model Conversion
+## PV Crack Detection
 ### General Usage
 `python3 -m src.main`
 
-### Configuration File
+### Configuration File Parameters
 Instead of passing options as arguments, you need to edit the configuration file located at `/src/config.py`. The following options are available:
 
 #### Tracing Parameters
