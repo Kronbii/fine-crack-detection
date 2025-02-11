@@ -4,14 +4,13 @@ import networkx as nx
 
 # ================= MST-BASED ORDERING FUNCTIONS =================
 def compute_euclidean_distance(p1, p2):
-    """Compute Euclidean distance between two points."""
-    return np.linalg.norm(p1 - p2)
+    """calculate Euclidean distance between two points"""
+    return np.linalg.norm(p1 - p2)  # linalg is used for better computational efficiency
 
 
-def build_complete_graph(points):
+def build_graph(points):
     """
-    Build a complete weighted graph from a set of points.
-    Each node represents a point (by its index) and each edge is weighted
+    Build a weighted graph from a set of points. Each node represents a point (by its index) and each edge is weighted
     by the Euclidean distance between points.
     """
     n = len(points)
@@ -26,10 +25,8 @@ def build_complete_graph(points):
 
 
 def compute_mst(points):
-    """
-    Compute the minimum spanning tree (MST) for the given points.
-    """
-    G = build_complete_graph(points)
+    """Compute the minimum spanning tree (MST) for the given points"""
+    G = build_graph(points)
     T = nx.minimum_spanning_tree(G, weight="weight")
     return T
 
@@ -59,10 +56,7 @@ def find_tree_diameter(T):
 
 
 def sort_corners(points):
-    """
-    Given a list of points, compute the MST, find its longest path (diameter),
-    and return the points ordered along that path.
-    """
+    """Sort a list of corner points based on MST-based ordering"""
     pts_array = np.array(points, dtype=float)
     T = compute_mst(pts_array)
     diameter_order = find_tree_diameter(T)

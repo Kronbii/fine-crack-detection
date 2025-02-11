@@ -8,6 +8,7 @@ from . import config
 def process_contour(
     contour, gray_img, mask, final_img_lines, final_corner_mask, empty_mask, result_img
 ):
+    """Process each contour using shi-tomasi and return the final image with lines and corners"""
     x, y, w, h = cv2.boundingRect(contour)
     xmin, ymin, xmax, ymax = x, y, x + w, y + h
 
@@ -32,7 +33,7 @@ def process_contour(
     corners = utils.convert_corners_to_coords(raw_corners)
     corners = utils.transform_corners(corners, xmin, ymin)
 
-    # Sort corners using the MST-based ordering method
+    # Order corners using the specified method
     if config.sort_method == "MST":
         sorted_corners = MST.sort_corners(corners)
     elif config.sort_method == "greedy":

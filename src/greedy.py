@@ -2,6 +2,7 @@ import numpy as np
 
 
 def sort_corners(corners):
+    """Sort the corners using a greedy-heuristic approach"""
     # Convert input (list of lists or array) to a NumPy array
     pts_array = np.array(corners, dtype=float)  # ensure float
 

@@ -11,6 +11,7 @@ from . import utils
 
 
 def interpolate_contour_points(contour, y_values):
+    # TODO: check the diff between this and method in utils and choose one
     """Interpolates contour points so that there is a point for every specified y-coordinate."""
     contour = contour.squeeze()  # Shape becomes (n, 2)
     x = contour[:, 0]
@@ -37,7 +38,9 @@ def preprocess_image(image, invert=True):
 
 def calculate_crack_accuracy(true_contour, gen_contour, distance_threshold=5):
     """Calculate accuracy metrics for an individual crack."""
-    min_y = max(np.min(true_contour[:, :, 1]), np.min(gen_contour[:, :, 1]))
+    min_y = max(
+        np.min(true_contour[:, :, 1]), np.min(gen_contour[:, :, 1])
+    )  # check countours function
     max_y = min(np.max(true_contour[:, :, 1]), np.max(gen_contour[:, :, 1]))
     y_values = np.arange(min_y, max_y + 1)
 
@@ -77,7 +80,7 @@ def calculate_crack_accuracy(true_contour, gen_contour, distance_threshold=5):
     }
 
 
-def calculate_iou(true_mask, gen_mask):
+def calculate_iou(true_mask, gen_mask):  # TODO: add threshold
     """Calculate IoU score for an individual crack."""
     intersection = np.logical_and(true_mask, gen_mask)
     union = np.logical_or(true_mask, gen_mask)
@@ -85,7 +88,7 @@ def calculate_iou(true_mask, gen_mask):
     return iou_score
 
 
-def draw_contours_with_labels(image, contours, color):
+def draw_contours_with_labels(image, contours, color):  # check how this works
     """Draw contours on the image and label each crack."""
     img_with_labels = image.copy()
 
@@ -168,17 +171,8 @@ def compare_avg_metrics(
     ),
 ):
     """
-    Reads two CSV files containing metrics with columns like:
-    Frame,Crack,Precision,Recall,F1-score,IoU,Mean Distance,Max Distance,RMS Error
-
-    1) Averages each metric across all rows in each file.
-    2) Plots each metric in a separate subplot with two bars: one for Model A, one for Model B.
-
-    :param fileA: Path to CSV file for model A.
-    :param fileB: Path to CSV file for model B.
-    :param modelA_name: Label for model A (used in plots).
-    :param modelB_name: Label for model B (used in plots).
-    :param metrics: Tuple/list of metric column names to compare.
+    Reads two metrics CSV files
+    and compares the average values of each metric for two models.
     """
     # 1. Read the CSVs
     dfA = pd.read_csv(fileA)
@@ -233,12 +227,8 @@ def plot_per_frame_metrics(
     ),
 ):
     """
-    Reads two CSV files containing columns: [Frame, Crack, <metrics>].
-    1) Groups by Frame (averaging across cracks) for each model.
-    2) Merges the two DataFrames on 'Frame'.
-    3) For each metric in `metrics`, creates a separate figure (window):
-       - Plots a grouped bar chart with frames on the x-axis
-         and raw metric values on the y-axis (no normalization).
+    Reads metrics CSV files
+    and plots the average values of each metric for two models.
     """
 
     # 1. Read and group by "Frame"
@@ -338,10 +328,6 @@ def overlay_cracks(true_crack_img, gen_crack_img):
     - Ground Truth → Green
     - Generated Crack → Red
     - Overlapping Areas → Yellow (Red + Green)
-
-    :param true_crack_img: Ground truth binary crack image
-    :param gen_crack_img: Generated binary crack image
-    :return: Overlayed image
     """
     # Ensure both images are the same size
     if true_crack_img.shape != gen_crack_img.shape:
@@ -496,4 +482,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

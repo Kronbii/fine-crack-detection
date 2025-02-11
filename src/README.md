@@ -16,6 +16,7 @@ python3 -m src.main
 - [`metrics.py`](./metrics.py) - Script for calculating performance metrics.
 - [`MST.py`](./MST.py) - Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
 - [`shitomasi.py`](./shitomasi.py) - Script for processing frames using the Shi-Tomasi algorithm.
+- [`utils.py`](./utils.py) - Utility functions used throughout the code.
 
 ---
 
