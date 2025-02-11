@@ -6,8 +6,8 @@
 
 ### Package Files
 
-* `config.py`: Configuration file containing parameters for the detection process.
-* `greedy.py`: Implementation of the greedy-heuristic algorithm for crack ordering.
+* [config.py](./config.py): Configuration file containing parameters for the detection process.
+* [greedy.py](./greedy.py): Implementation of the greedy-heuristic algorithm for crack ordering.
 * `main.py`: Main script to run the crack detection process.
 * `metrics.py`: Script for calculating performance metrics.
 * `MST.py`: Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
