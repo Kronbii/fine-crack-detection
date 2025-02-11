@@ -6,9 +6,8 @@
 
 ### Package Files
 
-[`config.py`](./config.py): Configuration file containing parameters for the detection process.
-
-[`greedy.py`](./greedy.py): Implementation of the greedy-heuristic algorithm for crack ordering.
+- [`config.py`](./config.py): Configuration file containing parameters for the detection process.
+- [`greedy.py`](./greedy.py): Implementation of the greedy-heuristic algorithm for crack ordering.
 
 [`main.py`](./main.py): Main script to run the crack detection process.
 
