@@ -1,11 +1,11 @@
 
-## PV Crack Detection
-### General Usage
+# PV Crack Detection
+## General Usage
 `python3 -m src.main`
 
 ---
 
-### **Package Files**
+## **Package Files**
 * [`config.py`](./config.py) - Configuration file containing parameters for the detection process.
 * [`greedy.py`](./greedy.py) - Implementation of the greedy-heuristic algorithm for crack ordering.
 * [`main.py`](./main.py) - Main script to run the crack detection process.
@@ -15,7 +15,7 @@
 
 ---
 
-### **Configuration File Parameters**
+## **Configuration File Parameters**
 Instead of passing options as arguments, you need to edit the configuration file located at `/src/config.py`. The following options are available:
 
 #### **Tracing Parameters**
