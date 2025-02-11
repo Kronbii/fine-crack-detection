@@ -68,12 +68,12 @@ def calculate_crack_accuracy(true_contour, gen_contour, distance_threshold=5):
     )
 
     return {
-        "Precision": precision,
-        "Recall": recall,
-        "F1-score": f1_score,
-        "Mean Distance": mean_distance,
-        "Max Distance": max_distance,
-        "RMS Error": rms_error,
+        "Precision": round(precision, 4),
+        "Recall": round(recall, 4),
+        "F1-score": round(f1_score, 4),
+        "Mean Distance": round(mean_distance, 4),
+        "Max Distance": round(max_distance, 4),
+        "RMS Error": round(rms_error, 4),
     }
 
 
@@ -250,7 +250,7 @@ def plot_per_frame_metrics(
     dfB_grouped = dfB.groupby("Frame")[list(metrics)].mean().reset_index()
 
     # Rename columns to keep them distinct in the merged DataFrame
-    # For example, Precision -> Precision_A, Precision_B
+    # Precision -> Precision_A, Precision_B
     dfA_grouped = dfA_grouped.rename(columns={m: f"{m}_A" for m in metrics})
     dfB_grouped = dfB_grouped.rename(columns={m: f"{m}_B" for m in metrics})
 
@@ -354,11 +354,51 @@ def overlay_cracks(true_crack_img, gen_crack_img):
         (true_crack_img.shape[0], true_crack_img.shape[1], 3), dtype=np.uint8
     )
 
+    # Assign generated cracks to RED channel
+    overlay[:, :, 2] = gen_crack_img  # Red channel
+
     # Assign ground truth cracks to GREEN channel
     overlay[:, :, 1] = true_crack_img  # Green channel
 
-    # Assign generated cracks to RED channel
-    overlay[:, :, 2] = gen_crack_img  # Red channel
+    # Define legend box position
+    legend_x, legend_y = 20, 20
+    legend_width, legend_height = 350, 100
+
+    # Draw legend background
+    cv2.rectangle(
+        overlay,
+        (legend_x, legend_y),
+        (legend_x + legend_width, legend_y + legend_height),
+        (255, 255, 255),
+        -1,
+    )  # White box
+
+    # Define legend labels
+    labels = [
+        ("Ground Truth", (0, 255, 0)),  # Green
+        ("Generated Crack", (0, 0, 255)),  # Red
+        ("Overlap", (0, 255, 255)),  # Yellow (Green + Red)
+    ]
+
+    # Draw legend text and colored markers
+    for i, (text, color) in enumerate(labels):
+        y_position = legend_y + 25 + (i * 25)
+        cv2.putText(
+            overlay,
+            text,
+            (legend_x + 40, y_position),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.9,
+            (0, 0, 0),
+            2,
+        )  # Black text
+        cv2.rectangle(
+            overlay,
+            (legend_x + 10, y_position - 10),
+            (legend_x + 30, y_position + 5),
+            color,
+            -1,
+        )  # Colored box
 
     return overlay
 
@@ -381,9 +421,7 @@ def main():
         frame_number = os.path.splitext(file)[0]
         print(f"Processing Frame {frame_number}...")
         gen_frame_path = os.path.join(gen_frames_dir, f"{frame_number}.ppm")
-        output_overlayed_path = os.path.join(
-            output_overlay_dir, f"{frame_number}.ppm"
-        )
+        output_overlayed_path = os.path.join(output_overlay_dir, f"{frame_number}.ppm")
 
         # Load images
         true_crack_img = cv2.imread(true_frame_path, cv2.IMREAD_GRAYSCALE)
@@ -439,7 +477,7 @@ def main():
                     true_mask, [true_contour], -1, 255, thickness=cv2.FILLED
                 )
                 cv2.drawContours(gen_mask, [gen_contour], -1, 255, thickness=cv2.FILLED)
-                iou_score = calculate_iou(true_mask, gen_mask)
+                iou_score = round(calculate_iou(true_mask, gen_mask), 4)
 
                 metrics["IoU"] = iou_score
 
@@ -458,3 +496,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

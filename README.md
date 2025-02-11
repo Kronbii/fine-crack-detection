@@ -35,15 +35,17 @@ This tool is ideal for **civil engineers, materials scientists, and AI researche
 fine-crack-detection/
 │── src/                        # Core source code
 │   │── main.py                 # Entry point for crack detection
-│   │── performance.py           # Evaluates detection accuracy
-│   │── visualization.py         # Generates overlays & plots
-│   │── config.py                # Configurations & paths
-│   │── utils.py                 # Helper functions
-│── data/                        # Input images & ground truth
-│── results/                     # Output metrics & overlayed images
-│── requirements.txt             # Dependencies
-│── README.md                    # Documentation
-│── LICENSE                      # License file
+│   │── performance.py          # Evaluates detection accuracy
+│   │── visualization.py        # Generates overlays & plots
+│   │── config.py               # Configurations & paths
+│   │── utils/                  # Helper functions
+│       │── image_processing.py # Image processing utilities
+│       │── metrics.py          # Performance metrics calculations
+│── data/                       # Input images & ground truth
+│── results/                    # Output metrics & overlayed images
+│── requirements.txt            # Dependencies
+│── README.md                   # Documentation
+│── LICENSE                     # License file
 ```
 
 ---
@@ -134,4 +136,3 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 ## **🌟 If You Find This Useful, Give It a Star!**
 If this repository helped you in your work or research, consider giving it a ⭐ on GitHub! Your support helps improve this project! 🚀
-

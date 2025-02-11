@@ -85,7 +85,7 @@ def main():
         )
         cv2.imwrite(result_file, result_img)
 
-        print(f"Processed image {image_number}")
+        print(f"Processed Frame {image_number}")
     print("[INFO] Done Processing")
     print("[INFO] Starting Perfomance Evaluation")
     metrics.main()

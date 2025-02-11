@@ -84,7 +84,6 @@ def interpolate_points(corners):
     xi, yi = splev(u, tck)
     return xi, yi
 
-
 def transform_corners(corners, xmin, ymin):
     return [[corner[0] + xmin, corner[1] + ymin] for corner in corners]
 
