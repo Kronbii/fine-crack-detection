@@ -3,7 +3,7 @@ import numpy as np
 import os
 from . import config
 from . import utils
-from . import process
+from . import shitomasi
 from . import metrics
 
 
@@ -60,7 +60,7 @@ def main():
         contours = utils.find_contours(mask)
         for contour in contours:
             final_img_lines, final_no_img_lines, final_corner_mask, result_img = (
-                process.process_contour(
+                shitomasi.process_contour(
                     contour,
                     gray_img,
                     mask,

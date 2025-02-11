@@ -3,6 +3,17 @@
 ### General Usage
 `python3 -m src.main`
 
+
+### Package Files
+
+* `config.py`: Configuration file containing parameters for the detection process.
+* `greedy.py`: Implementation of the greedy-heuristic algorithm for crack ordering.
+* `main.py`: Main script to run the crack detection process.
+* `metrics.py`: Script for calculating performance metrics.
+* `MST.py`: Implementation of the Minimum Spanning Tree (MST) algorithm for crack ordering.
+* `shitomasi.py`: Script for processing frames using the Shi-Tomasi algorithm.
+
+
 ### Configuration File Parameters
 Instead of passing options as arguments, you need to edit the configuration file located at `/src/config.py`. The following options are available:
 
@@ -17,7 +28,7 @@ Instead of passing options as arguments, you need to edit the configuration file
 * `mindistance`: Minimum distance between detected corners (default is 10px)
 * `blocksize`: Block size for Shi-Tomasi detection (default is 3)
 
-#### Output Directories
+#### Input/Output Directories
 * `frames_dir`: Directory for input framess
 * `masks_dir`: Directory for input masks
 * `ground_frames_dir`: Directory for ground truth frames
