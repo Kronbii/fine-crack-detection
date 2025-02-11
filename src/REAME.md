@@ -7,13 +7,18 @@
 ### Configuration File
 Instead of passing options as arguments, you need to edit the configuration file located at `/src/config.py`. The following options are available:
 
+#### Tracing Parameters
 * `sort_method`: Sorting method (MST, greedy, classic)
 * `tracing_method`: Tracing method (interpolation, classic)
 * `interpolation_degree`: Degree of interpolation (default is 3)
+
+#### Shi-Tomasi Parameters
 * `maxcorners`: Maximum number of corners for Shi-Tomasi detection (default is 1000000)
 * `minquality`: Minimum quality level for Shi-Tomasi detection (default is 0.09)
 * `mindistance`: Minimum distance between detected corners (default is 10px)
 * `blocksize`: Block size for Shi-Tomasi detection (default is 3)
+
+#### Output Directories
 * `frames_dir`: Directory for input framess
 * `masks_dir`: Directory for input masks
 * `ground_frames_dir`: Directory for ground truth frames
