@@ -52,9 +52,9 @@ def main():
 
         # ----------------- Variables to store final images to be saved -----------------
         final_img_lines = img.copy()
+        result_img = img.copy()
         final_corner_mask = np.zeros_like(img, dtype=np.uint8)
         final_no_img_lines = np.zeros_like(gray_img, dtype=np.uint8)
-        result_img = img.copy()
 
         # ----------------- Find contours and process each contour -----------------
         contours = utils.find_contours(mask)

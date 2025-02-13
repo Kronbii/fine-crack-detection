@@ -32,15 +32,15 @@ def preprocess_image(image, invert=True):
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     enhanced_img = clahe.apply(image)
 
-    _, binary_image = cv2.threshold(enhanced_img, 200, 255, cv2.THRESH_BINARY)
+    _, binary_image = cv2.threshold(
+        enhanced_img, 200, 255, cv2.THRESH_BINARY
+    )  # TODO: check the threshold
     return binary_image if not invert else cv2.bitwise_not(binary_image)
 
 
 def calculate_crack_accuracy(true_contour, gen_contour, distance_threshold=5):
     """Calculate accuracy metrics for an individual crack."""
-    min_y = max(
-        np.min(true_contour[:, :, 1]), np.min(gen_contour[:, :, 1])
-    )  # check countours function
+    min_y = max(np.min(true_contour[:, :, 1]), np.min(gen_contour[:, :, 1]))
     max_y = min(np.max(true_contour[:, :, 1]), np.max(gen_contour[:, :, 1]))
     y_values = np.arange(min_y, max_y + 1)
 
@@ -88,7 +88,7 @@ def calculate_iou(true_mask, gen_mask):  # TODO: add threshold
     return iou_score
 
 
-def draw_contours_with_labels(image, contours, color):  # check how this works
+def draw_contours_with_labels(image, contours, color):  # TODO: check how this works
     """Draw contours on the image and label each crack."""
     img_with_labels = image.copy()
 
@@ -346,6 +346,17 @@ def overlay_cracks(true_crack_img, gen_crack_img):
     # Assign ground truth cracks to GREEN channel
     overlay[:, :, 1] = true_crack_img  # Green channel
 
+    for y_range in range(overlay.shape[0]):
+        if y_range % 3 != 0:
+            continue
+        true_indices = np.where(overlay[y_range, :, 1] > 0)
+        gen_indices = np.where(overlay[y_range, :, 2] > 0)
+
+        if true_indices[0].size > 0 and gen_indices[0].size > 0:
+            x_true = int(np.median(true_indices))
+            x_gen = int(np.median(gen_indices))
+            cv2.line(overlay, (x_true, y_range), (x_gen, y_range), (255, 255, 255), 1)
+
     # Define legend box position
     legend_x, legend_y = 20, 20
     legend_width, legend_height = 350, 100
@@ -397,6 +408,7 @@ def main():
     output_overlay_dir = config.output_overlay_dir
     utils.define_dir(metrics_output_dir, output_overlay_dir)
 
+    # Files
     output_json_file = config.output_json_file
     output_csv_file = config.output_csv_file
 
@@ -406,6 +418,7 @@ def main():
         true_frame_path = os.path.join(ground_frames_dir, file)
         frame_number = os.path.splitext(file)[0]
         print(f"Processing Frame {frame_number}...")
+
         gen_frame_path = os.path.join(gen_frames_dir, f"{frame_number}.ppm")
         output_overlayed_path = os.path.join(output_overlay_dir, f"{frame_number}.ppm")
 
@@ -423,7 +436,7 @@ def main():
 
         # Find contours
         true_contours, _ = cv2.findContours(
-            true_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
+            true_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE  # check the chain approx
         )
         gen_contours, _ = cv2.findContours(
             gen_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE
@@ -434,6 +447,7 @@ def main():
         if not true_contours or not gen_contours:
             print(f"No valid cracks detected in Frame {frame_number}.")
         else:
+            # --------------- Match the countours with their correct ground truth ---------------
             paired_cracks = []
             for gen_contour in gen_contours:
                 min_distance = float("inf")

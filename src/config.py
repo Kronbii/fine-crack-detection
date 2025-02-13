@@ -1,5 +1,6 @@
+test = True
 # ----------------- Sorting parameters -----------------
-sort_method = "greedy"  # MST, greedy, classic
+sort_method = "MST"  # MST, greedy, classic
 
 # ----------------- Tracing parameters -----------------
 tracing_method = "interpolation"  # interpolation, classic
@@ -14,7 +15,11 @@ blocksize = 3
 # ----------------- Input directories -----------------
 frames_dir = "NRV0719"
 masks_dir = "test_masks"
-frames_output_dir = f"results/{sort_method}-{tracing_method}"  # automatically edited
+if test:
+    frames_output_dir = f"results/{sort_method}-{tracing_method}-test"  # automatically edited
+else:
+    frames_output_dir = f"results/{sort_method}-{tracing_method}"  # automatically edited
+
 
 # ----------------- Performance directories -----------------
 ground_frames_dir = "drawn-cracks"

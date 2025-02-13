@@ -12,8 +12,11 @@ def process_contour(
     x, y, w, h = cv2.boundingRect(contour)
     xmin, ymin, xmax, ymax = x, y, x + w, y + h
 
+    # Crop the image and mask
     cropped_img = gray_img[ymin:ymax, xmin:xmax]
     cropped_mask = mask[ymin:ymax, xmin:xmax]
+    
+    # Process the cropped image
     processed_img = utils.opening(cropped_img)
 
     # Detect corners using Shi-Tomasi method
