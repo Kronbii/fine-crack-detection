@@ -2,7 +2,10 @@
 /NRV0719
 /test_masks
 /used_masks
+/used-masks
+/test-masks
 /results
 /fine-crack-venv
 /drawn-cracks
 /papers
+/.vscode
