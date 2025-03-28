@@ -1,72 +1,96 @@
 import numpy as np
+import os
+import cv2
 import matplotlib.pyplot as plt
-from scipy.interpolate import splprep, splev
-from src.MST import sort_corners
 
 
-def interpolate_contour_points(x, y, y_values):
-    """Interpolates contour points so that there is a point for every specified y-coordinate."""
-    sorted_indices = np.argsort(y)
-    x = x[sorted_indices]
-    y = y[sorted_indices]
+def Canny_detector(img, weak_th=None, strong_th=None):
+    """
+    Custom Canny-like edge detection.
+    For demonstration, uses gradient magnitude (mag) with non-maximum suppression.
+    """
+    # Convert image to grayscale
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    interpolated_x = np.interp(y_values, y, x)
-    interpolated_points = np.column_stack((interpolated_x, y_values))
+    # Noise reduction via Gaussian blur
+    img = cv2.GaussianBlur(img, (11, 11), 1.4)
 
-    return interpolated_points
+    # Calculate gradients using Sobel
+    gx = cv2.Sobel(np.float32(img), cv2.CV_64F, 1, 0, 3)
+    gy = cv2.Sobel(np.float32(img), cv2.CV_64F, 0, 1, 3)
+
+    # Convert cartesian to polar coords (gradient magnitude and direction)
+    mag, ang = cv2.cartToPolar(gx, gy, angleInDegrees=True)
+
+    # Set thresholds if not provided
+    mag_max = np.max(mag)
+    if not weak_th:
+        weak_th = mag_max * 0.1
+    if not strong_th:
+        strong_th = mag_max * 0.5
+
+    # Dimensions
+    height, width = img.shape
+
+    # Non-Maximum Suppression
+    for i_x in range(width):
+        for i_y in range(height):
+            grad_ang = ang[i_y, i_x]
+            grad_ang = abs(grad_ang - 180) if abs(grad_ang) > 180 else abs(grad_ang)
+
+            # Identify neighbor coords based on angle range
+            if grad_ang <= 22.5:
+                neighb_1_x, neighb_1_y = i_x - 1, i_y
+                neighb_2_x, neighb_2_y = i_x + 1, i_y
+
+            elif grad_ang > 22.5 and grad_ang <= (22.5 + 45):
+                neighb_1_x, neighb_1_y = i_x - 1, i_y - 1
+                neighb_2_x, neighb_2_y = i_x + 1, i_y + 1
+
+            elif grad_ang > (22.5 + 45) and grad_ang <= (22.5 + 90):
+                neighb_1_x, neighb_1_y = i_x, i_y - 1
+                neighb_2_x, neighb_2_y = i_x, i_y + 1
+
+            elif grad_ang > (22.5 + 90) and grad_ang <= (22.5 + 135):
+                neighb_1_x, neighb_1_y = i_x - 1, i_y + 1
+                neighb_2_x, neighb_2_y = i_x + 1, i_y - 1
+
+            elif grad_ang > (22.5 + 135) and grad_ang <= (22.5 + 180):
+                neighb_1_x, neighb_1_y = i_x - 1, i_y
+                neighb_2_x, neighb_2_y = i_x + 1, i_y
+
+            # Bounds check and compare magnitudes
+            if 0 <= neighb_1_x < width and 0 <= neighb_1_y < height:
+                if mag[i_y, i_x] < mag[neighb_1_y, neighb_1_x]:
+                    mag[i_y, i_x] = 0
+                    continue
+
+            if 0 <= neighb_2_x < width and 0 <= neighb_2_y < height:
+                if mag[i_y, i_x] < mag[neighb_2_y, neighb_2_x]:
+                    mag[i_y, i_x] = 0
+
+    # Double threshold
+    ids = np.zeros_like(img)
+    for i_x in range(width):
+        for i_y in range(height):
+            grad_mag = mag[i_y, i_x]
+            if grad_mag < weak_th:
+                mag[i_y, i_x] = 0
+            elif strong_th > grad_mag >= weak_th:
+                ids[i_y, i_x] = 1
+            else:
+                ids[i_y, i_x] = 2
+
+    return mag
 
 
-def interpolate_points(old_x, old_y):
-    """Interpolate the corners using a B-spline interpolation."""
-    tck, u = splprep(
-        [old_x, old_y], s=0, k=3
-    )  # Using cubic spline (k=3) for smoothness
-    xi, yi = splev(np.linspace(0, 1, 100), tck)  # Generate 100 interpolated points
-    return xi, yi
+# 1) Load original image
+frame = cv2.imread("205.jpg")
 
+canny_img = Canny_detector(frame)
 
-# Generate random points
-num_points = 10
-x = np.random.uniform(0, 10, num_points)
-y = np.random.uniform(0, 10, num_points)
-y_values = np.linspace(0, 10, 100)  # Fine y-values for interpolation
-
-# Sort the points using MST-based ordering
-points = np.column_stack((x, y))
-sorted_points = sort_corners(points)
-new_x = [x for x, y in sorted_points]
-new_y = [y for x, y in sorted_points]
-
-# Apply interpolation techniques
-points1 = interpolate_contour_points(x, y, y_values)  # Linear Interpolation
-points2_x, points2_y = interpolate_points(new_x, new_y)  # B-Spline Interpolation
-
-# Plot the results
-plt.figure(figsize=(8, 6))
-
-# Scatter plot of original points
-plt.scatter(x, y, color="black", marker="o", label="Original Points")
-
-# Linear Interpolation (np.interp)
-plt.plot(
-    points1[:, 0],
-    points1[:, 1],
-    color="red",
-    linestyle="--",
-    label="Linear Interpolation",
-)
-
-# B-Spline Interpolation
-plt.plot(
-    points2_x, points2_y, color="blue", linestyle="-", label="B-Spline Interpolation"
-)
-
-# Labels and Legend
-plt.xlabel("X-axis")
-plt.ylabel("Y-axis")
-plt.title("Comparison of Linear vs. B-Spline Interpolation")
-plt.legend()
-plt.grid(True)
-
-# Show the plot
-plt.show()
+# If you just want to see the Canny edges in an OpenCV window
+cv2.namedWindow("Canny Result", cv2.WINDOW_NORMAL)
+cv2.imshow("Canny Result", canny_img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
