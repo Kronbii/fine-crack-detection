@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fine-tracing"
+version = "0.1.0"
+description = "Fine crack tracing and metrics toolkit"
+readme = "README.md"
+authors = [ { name = "Kronbii" } ]
+license = { text = "MIT" }
+requires-python = ">=3.8"
+keywords = ["computer-vision", "crack-detection", "image-processing", "metrics", "opencv"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Image Processing",
+]
+dependencies = [
+  "numpy>=1.26.0",
+  "opencv-python>=4.6.0",
+  "networkx>=3.0",
+  "pandas",
+  "matplotlib",
+  "scipy",
+]
+
+[project.scripts]
+fine-tracing = "fine_tracing.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+strict = false
+

@@ -10,3 +10,19 @@
 /papers
 /.vscode
 /test
+
+# Added standard Python ignores
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+logging.log
+*.csv
+*.json
+.idea/
+.DS_Store
